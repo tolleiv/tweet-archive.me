@@ -8,4 +8,4 @@ app.get('/', function(req, res) {
   res.send("Sorry this service is currently in maintenance mode");
 });
 
-app.listen(parseInt(process.env.PORT || 8001));
+app.listen(parseInt(process.env.PORT || 3001));

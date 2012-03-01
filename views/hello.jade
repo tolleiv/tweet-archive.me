@@ -1,16 +1,19 @@
 .container.row
-    .hero-unit.span7.offset2
+    .hero.hero-unit.span7.offset2
         h1= title
         p A little twitter archving service ... let's try it out:
         p
                 a(href='/sessions/login').btn.btn-primary.btn-large Login with twitter&nbsp;
                     i.icon-chevron-right.icon-white
 .container.row
-        .span4.offset2
+        .span4.offset2.delayed
             p.alert This is early alpha, data will most likely be lost, interfaces might change, things will change without notice - be prepared.
 
-        .span4
+        .span4.delayed
             p.alert.alert-info You might wonder who's working here -
                 a(href='http://www.twitter.com/tolleiv') find me on twitter @tolleiv
-        .span4.offset6
+        .span4.offset6.delayed
             p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Twitter Bootstrap and few others.
+
+
+

@@ -5,7 +5,7 @@
 
 var mongoose    = require('mongoose'),
     UserModel = require('../models/UserModel');
-  //  messageModel = require('../models/MessageModel');
+    MessageModel = require('../models/MessageModel');
 
 // Open DB connection
 mongoose.connect('mongodb://localhost/members');
@@ -18,8 +18,18 @@ exports.index = function(req, res){
     }
 };
 
-exports.update = function(req, res) {
-
+exports.tweets = function(req, res) {
+    if (typeof req.session.twitter != 'object') {
+        res.send('what???', 401);
+        return;
+    }
+    UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
+        MessageModel.find({users: doc._id}).limit(10).skip(parseInt(req.param('offset', 0))).run(function(err, docs) {
+            if (req.params.format) {
+                res.json(docs);
+            }
+        });
+    });
 }
 
 exports.login = function(req, res) {
@@ -38,4 +48,9 @@ exports.login = function(req, res) {
             res.redirect('/');
         }
     });
+};
+
+exports.logout = function (req, res) {
+    delete req.session.destroy();
+    res.redirect('/');
 };

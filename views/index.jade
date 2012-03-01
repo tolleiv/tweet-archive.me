@@ -1,3 +1,7 @@
-h1 Your archive #{name}
-div.container
-    p lorem
+.container.row
+    .span6.offset3.hero-unit.young-hero
+        h2 @#{name} archived so far ...
+            a(href='/logout').btn.btn-warning.btn-small.pull-right Logout
+
+    .span6.offset3
+        .tweets
