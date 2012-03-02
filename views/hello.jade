@@ -6,14 +6,48 @@
                 a(href='/sessions/login').btn.btn-primary.btn-large Login with twitter&nbsp;
                     i.icon-chevron-right.icon-white
 .container.row
-        .span4.offset2.delayed
-            p.alert This is early alpha, data will most likely be lost, interfaces might change, things will change without notice - be prepared.
 
-        .span4.delayed
-            p.alert.alert-info You might wonder who's working here -
-                a(href='http://www.twitter.com/tolleiv') find me on twitter @tolleiv
-        .span4.offset6.delayed
-            p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Twitter Bootstrap and few others.
+        .span5.offset2
+            | Twitter streams might contain valuable information and often shared links turn out to be
+            | important right after they disappeared from the twitter timeline. So this one is trying to
+            | build a up an archiv service for your Twitter timeline. With easy and flexible search functionality
+            | flexible filters and with control over your data.
+
+            | It's still under heavy development, but here's what it has and what's to come next:
+
+            h3 Features implemented so far:
+            dl
+                dt  Archive your timeline&nbsp;
+                    i.icon-check
+                dd Right after your first login the service will start archiving your timeline - that works quite reliable already.
+                dt Listing your tweets&nbsp;
+                    i.icon-check
+                dd Whatever is in your archive will be listen in the backend as well. The GUI is not perfect yet but works ;)
+
+            h3 Features to come (next):
+            dl
+                dt Remove shortened Urls
+                dd An archive which holds shortened Urls is worthless once the shortener goes out of service, so replacing shortened Urls is sth. which is essential and which will come very soon.
+                dt Search
+                dd That's what you need when your timeline outgrows a certain size - right?
+                dt Efficient storage
+                dd Currently all tweets are kept per user. That wasts memory and make all database operations a bit more inefficient.
+                dt Data control
+                dd I'm not interested in your data anyhow - so providing a feature to delete your archive is planned quite early.
+                dt ...
+                dd Many other things, I haven't made up my mind on that yet.
+
+        .span3
+            .delayed
+                p.alert This is early alpha, data will most likely be lost, interfaces might change, things will change without notice - better be prepared.
+
+            .delayed
+                p.alert.alert-info You might wonder who's working here -
+                    a(href='http://www.twitter.com/tolleiv') find me on twitter @tolleiv
+                    | To get updates on the service simply follow&nbsp;
+                    a(href='http://www.twitter.com/tweetarchiveme')@tweetarchiveme on Twitter
+            .delayed
+                p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Twitter Bootstrap and few others.
 
 
 
