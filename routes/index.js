@@ -24,7 +24,7 @@ exports.tweets = function(req, res) {
         return;
     }
     UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
-        MessageModel.find({users: doc._id}).desc('date').limit(10).skip(parseInt(req.param('offset', 0))).run(function(err, docs) {
+        MessageModel.find({users: doc._id}).desc('date').limit(25).skip(parseInt(req.param('offset', 0))).run(function(err, docs) {
             if (req.params.format) {
                 res.json(docs);
             }
