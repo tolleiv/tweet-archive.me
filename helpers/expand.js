@@ -14,7 +14,7 @@ function expandThisUrl(urlToParse, callback) {
     function extractRealURL(res) {
         callback(null, res.headers.location || short.href);
     }
-    function forwardError(error) {
+    function forwardError(err) {
         callback(err, short,href);
     }
 }
