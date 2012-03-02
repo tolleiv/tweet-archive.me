@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('.delayed').delay(200).fadeIn();
 
-
+    var listDate = null;
     $(".tweets").autobrowse({
         url:function (offset) {
             return "/tweets.json?offset=" + offset;
@@ -10,6 +10,11 @@ $(document).ready(function () {
             var markup = '';
             console.log(response[0]);
             for (var i = 0; i < response.length; i++) {
+                var tweetDate = new Date(response[i].date);
+                if (!listDate || tweetDate.toGMTString().substr(0,16) != listDate.toGMTString().substr(0,16)) {
+                    markup += '<div class="span1 tweet-date">' + tweetDate.toGMTString().substr(0,16) + '</div>'
+                    listDate = tweetDate;
+                }
                 markup += '<div class="tweet">' + renderTweet(response[i].data) + '</div>';
             }
             return markup;
@@ -20,8 +25,8 @@ $(document).ready(function () {
         offset:0,
         //max:100,
         loader:'<div class="loader"></div>',
-        useCache:false,
-        sensitivity: 250,
+        sensitivity: 200,
+        useCache:true,
         expiration:1
     });
 });

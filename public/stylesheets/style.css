@@ -35,6 +35,20 @@ body {
 .tweet:last-of-type {
     border:none;
 }
+
+.tweets .tweet-date {
+    float:right;
+    margin-right:-90px;
+    min-height: 30px;
+    padding: 5px 10px;
+    background: #f5f5f5;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border-left: none;
+    color: #999;
+}
 .at-user {
     color: #DDD;
 }
