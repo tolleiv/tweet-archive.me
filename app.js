@@ -29,6 +29,7 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', routes.index);
+app.get('/start', routes.start);
 app.get('/login', routes.login);
 app.get('/logout', routes.logout);
 app.get('/tweets:format?', routes.tweets);
