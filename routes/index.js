@@ -32,6 +32,11 @@ exports.tweets = function(req, res) {
     });
 }
 
+exports.start = function(req, res) {
+    delete req.session.destroy();
+    res.redirect('/sessions/login');
+};
+
 exports.login = function(req, res) {
     UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
         if (err || !doc) {
