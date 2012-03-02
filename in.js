@@ -1,8 +1,9 @@
-var twitter = require('ntwitter');
-var mongoose = require('mongoose'),
+var twitter = require('ntwitter'),
+    mongoose = require('mongoose'),
     UserModel = require('./models/UserModel'),
     MessageModel = require('./models/MessageModel'),
-    config = require('./config');
+    config = require('./config'),
+    expand = require('./helpers/expand.js');
 
 mongoose.connect('mongodb://localhost/members');
 
@@ -29,13 +30,18 @@ function captureTweets(user) {
         users[user.name] = true;
         stream.on('data', function (data) {
             if (data.text && data.user && data.user.name) {
-                var message = new MessageModel();
-                message.summary = data.user.screen_name + ': ' + data.text
-                message.data = data
-                message.users.push(user._id);
-                message.save(function (err) {
-                    if (!err) console.log('[' + user.name + ']' + data.user.screen_name + ': ' + data.text);
+
+                expand(data.entities.urls, function(urls) {
+                    data.entities.urls = urls;
+                    var message = new MessageModel();
+                    message.summary = data.user.screen_name + ': ' + data.text
+                    message.data = data
+                    message.users.push(user._id);
+                    message.save(function (err) {
+                        if (!err) console.log('[' + user.name + ']' + data.user.screen_name + ': ' + data.text);
+                    });
                 });
+
             }
         });
         stream.on('error', function (err) {
