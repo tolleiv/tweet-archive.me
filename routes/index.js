@@ -14,7 +14,11 @@ exports.index = function(req, res){
     if (typeof req.session.twitter != 'object') {
         res.render('hello', { title: 'tweet-archive.me' })
     } else {
-        res.render('index', { title: 'tweet-archive.me', name: req.session.twitter.name })
+        UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
+            MessageModel.find({users: doc._id}).count().run(function(err, cnt) {
+                res.render('index', { title: 'tweet-archive.me', name: req.session.twitter.name, count: (err ? 0 : cnt) });
+            });
+        });
     }
 };
 

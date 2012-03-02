@@ -1,6 +1,7 @@
 .container.row
     .span6.offset3.hero-unit.young-hero
-        h2 @#{name} archived so far ...
+        h2 @#{name}
+            small &nbsp;&mdash; #{count} tweets archived so far ...
             a(href='/logout').btn.btn-warning.btn-small.pull-right Logout
 
     .span6.offset3
