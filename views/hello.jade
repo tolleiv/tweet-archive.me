@@ -10,7 +10,7 @@
         .span5.offset2
             | Twitter streams might contain valuable information and often shared links turn out to be
             | important right after they disappeared from the twitter timeline. So this one is trying to
-            | build a up an archiv service for your Twitter timeline. With easy and flexible search functionality
+            | build an archiv service for your Twitter timeline. With easy and flexible search functionality,
             | flexible filters and with control over your data.
 
             | It's still under heavy development, but here's what it has and what's to come next:
@@ -23,11 +23,12 @@
                 dt Listing your tweets&nbsp;
                     i.icon-check
                 dd Whatever is in your archive will be listen in the backend as well. The GUI is not perfect yet but works ;)
+                dt Remove shortened Urls&nbsp;
+                    i.icon-check
+                dd An archive which holds shortened Urls is worthless once the shortener goes out of service, so replacing shortened Urls is sth. which I found essential and which is working in a basic implementation already.
 
             h3 Features to come (next):
             dl
-                dt Remove shortened Urls
-                dd An archive which holds shortened Urls is worthless once the shortener goes out of service, so replacing shortened Urls is sth. which is essential and which will come very soon.
                 dt Search
                 dd That's what you need when your timeline outgrows a certain size - right?
                 dt Efficient storage
@@ -42,8 +43,9 @@
                 p.alert This is early alpha, data will most likely be lost, interfaces might change, things will change without notice - better be prepared.
 
             .delayed
-                p.alert.alert-info You might wonder who's working here -
-                    a(href='http://www.twitter.com/tolleiv') find me on twitter @tolleiv
+                p.alert.alert-info You might wonder who's working here -&nbsp;
+                    a(href='http://www.twitter.com/tolleiv') find me on Twitter @tolleiv
+                    br
                     | To get updates on the service simply follow&nbsp;
                     a(href='http://www.twitter.com/tweetarchiveme')@tweetarchiveme on Twitter
             .delayed
