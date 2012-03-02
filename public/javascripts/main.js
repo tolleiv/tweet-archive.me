@@ -36,12 +36,17 @@ function renderTweet(tweet) {
     var linkTpl = '<a href="URL">LINK</a>';
     for(var i=0;i<tweet.entities.urls.length;i++) {
         var c = tweet.entities.urls[i];
-        var display_url = c.expanded_url.replace(/^https?:\/\//,'').replace(/^www/,'');
+        var display_url = c.expanded_url.replace(/^https?:\/\//,'').replace(/^www./,'');
         if (display_url.length > 40) {
             display_url = display_url.substr(0,40) + '...'
         }
         var link = linkTpl.replace(/URL/, c.expanded_url).replace(/LINK/, display_url)
         text = text.replace(c.url, link);
     }
-    return text + " &mdash; <span class='at-user'>@" +  tweet.user.screen_name+ "</span>";
+    var msg = text + " &mdash; <span class='at-user'>@" +  tweet.user.screen_name+ "</span>";
+
+    if (tweet.favorited) {
+        msg = msg + '<i class="icon-star"></i>' + '######'
+    }
+    return msg;
 }
