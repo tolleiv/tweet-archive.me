@@ -15,7 +15,7 @@ $(document).ready(function () {
                     markup += '<div class="span1 tweet-date">' + tweetDate.toGMTString().substr(0,16) + '</div>'
                     listDate = tweetDate;
                 }
-                markup += '<div class="tweet">' + renderTweet(response[i].data) + '</div>';
+                markup += renderTweet(response[i].data);
             }
             return markup;
         },
@@ -48,5 +48,12 @@ function renderTweet(tweet) {
     if (tweet.favorited) {
         msg = msg + '<i class="icon-star"></i>' + '######'
     }
+
+    if (tweet.user.screen_name == me) {
+        msg = '<div class="tweet my-tweet">' + msg + '</div>';
+    } else {
+        msg = '<div class="tweet">' + msg + '</div>';
+    }
+
     return msg;
 }
