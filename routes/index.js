@@ -2,7 +2,7 @@
 var mongoose    = require('mongoose'),
     UserModel = require('../models/UserModel'),
     MessageModel = require('../models/MessageModel'),
-    config = require('./config');
+    config = require('../config');
 
 // Open DB connection
 mongoose.connect(config.mongo.url);
