@@ -9,6 +9,10 @@ var twitter = {
 
 module.exports.twitter = twitter;
 
+module.exports.mongo = {
+    url: 'mongodb://localhost/members'
+};
+
 module.exports.user_credentials = function(user) {
     return {
         consumer_key: twitter.consumerKey,

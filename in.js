@@ -5,10 +5,12 @@ var twitter = require('ntwitter'),
     config = require('./config'),
     expand = require('./helpers/expand.js');
 
-mongoose.connect('mongodb://localhost/members');
+mongoose.connect(config.mongo.url);
 
 var users = {};
 var errorCnt = {};
+var verbose = process.env.NODE_ENV != 'production';
+
 function capture(query) {
         // Make sure the user is active
     query.features = 1
@@ -38,7 +40,6 @@ function captureTweets(user) {
         stream.on('data', function (data) {
             if (data.text && data.user && data.user.name) {
                 errorCnt[user.name] = 0;
-
                 expand(data.entities.urls, function(urls) {
                     data.entities.urls = urls;
                     var message = new MessageModel();
@@ -46,44 +47,44 @@ function captureTweets(user) {
                     message.data = data
                     message.users.push(user._id);
                     message.save(function (err) {
-                        if (!err) console.log('[' + user.name + ']' + data.user.screen_name + ': ' + data.text);
+                        if (!err && verbose) console.log('[' + user.name + ']' + data.user.screen_name + ': ' + data.text);
                     });
                 });
 
             }
         });
         stream.on('error', function (err) {
-            console.log('Event: error')
-            console.log(err);
+            if (verbose) console.log('Event: error')
+            if (verbose) console.log(err);
         });
         stream.on('end', function (response) {
-            console.log('Event: end - ' + user.name)
-            console.log(response);
+            if (verbose) console.log('Event: end - ' + user.name)
+            if (verbose) console.log(response);
             users[user.name] = false;
             errorCnt[user.name] = errorCnt[user.name]+1;
             setTimeout(function() {
                 if (errorCnt[user.name] < 10) {
-                    console.log('Restart');
+                    if (verbose) console.log('Restart');
                     capture({name: user.name})
                 } else {
-                    console.log('Stopped - ' + user.name)
+                    console.error('Stopped - ' + user.name)
                 }
             }, errorCnt[user.name]*1000);
         });
         stream.on('destroy', function (response) {
             // Handle a 'silent' disconnection from Twitter, no end/error event fired
-            console.log('Event: destroy' + user.name);
+            if (verbose) console.log('Event: destroy' + user.name);
             users[user.name] = false;
             errorCnt[user.name] = errorCnt[user.name]+1;
             setTimeout(function() {
                 if (errorCnt[user.name] < 10) {
-                    console.log('Restart');
+                    if (verbose) console.log('Restart');
                     capture({name: user.name})
                 } else {
-                    console.log('Stopped - ' + user.name)
+                    console.error('Stopped - ' + user.name)
                 }
             }, errorCnt[user.name]*1000);
         });
     });
-    console.log('Streaming stuff for ' + user.name);
+    console.info('Streaming for ' + user.name);
 }

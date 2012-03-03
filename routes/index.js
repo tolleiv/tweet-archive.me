@@ -1,14 +1,11 @@
 
-/*
- * GET home page.
- */
-
 var mongoose    = require('mongoose'),
-    UserModel = require('../models/UserModel');
-    MessageModel = require('../models/MessageModel');
+    UserModel = require('../models/UserModel'),
+    MessageModel = require('../models/MessageModel'),
+    config = require('./config');
 
 // Open DB connection
-mongoose.connect('mongodb://localhost/members');
+mongoose.connect(config.mongo.url);
 
 exports.index = function(req, res){
     if (typeof req.session.twitter != 'object') {
@@ -22,8 +19,6 @@ exports.index = function(req, res){
                     res.render('index', { title: 'tweet-archive.me', name: req.session.twitter.name, count: (err ? 0 : cnt) });
                 });
             }
-
-
         });
     }
 };
