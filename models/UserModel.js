@@ -8,7 +8,8 @@ var UserSchema = new Schema({
     name        : { type: String, required: true },
     token         : { type: String, required: true },
     tokenSecret      : { type: String, required: true },
-    lastlogin   : Date
+    lastlogin   : Date,
+    features : { type: Number, default: 0 }
 });
 
 // Date setter

@@ -9,8 +9,9 @@ mongoose.connect('mongodb://localhost/members');
 
 var users = {};
 var errorCnt = {};
-
 function capture(query) {
+        // Make sure the user is active
+    query.features = 1
     UserModel.find(query, function(err, docs) {
         var i = docs.length;
         var tO = setInterval(function() {

@@ -15,9 +15,15 @@ exports.index = function(req, res){
         res.render('hello', { title: 'tweet-archive.me' })
     } else {
         UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
-            MessageModel.find({users: doc._id}).count().run(function(err, cnt) {
-                res.render('index', { title: 'tweet-archive.me', name: req.session.twitter.name, count: (err ? 0 : cnt) });
-            });
+            if (doc.features <= 0) {
+                res.render('wait', { title: 'tweet-archive.me', name: req.session.twitter.name });
+            } else {
+                MessageModel.find({users: doc._id}).count().run(function(err, cnt) {
+                    res.render('index', { title: 'tweet-archive.me', name: req.session.twitter.name, count: (err ? 0 : cnt) });
+                });
+            }
+
+
         });
     }
 };
@@ -27,7 +33,7 @@ exports.tweets = function(req, res) {
         res.send('what???', 401);
         return;
     }
-    UserModel.findOne({ name: req.session.twitter.name }, function(err, doc) {
+    UserModel.findOne({ name: req.session.twitter.name, features: 1 }, function(err, doc) {
         MessageModel.find({users: doc._id}).desc('date').limit(25).skip(parseInt(req.param('offset', 0))).run(function(err, docs) {
             if (req.params.format) {
                 res.json(docs);
@@ -54,7 +60,10 @@ exports.login = function(req, res) {
             });
         } else {
                 // User found :)
-            res.redirect('/');
+            doc.lastlogin = new Date();
+            doc.save(function(err) {
+                res.redirect('/');
+            });
         }
     });
 };

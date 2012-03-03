@@ -1,0 +1,14 @@
+.container.row
+    .span6.offset3.hero-unit.young-hero
+        h2 @#{name}
+            small &nbsp;&mdash; not actived yet ...
+            a(href='/logout').btn.btn-warning.btn-small.pull-right Logout
+
+    .span6.offset3
+        .delayed
+            p.alert.alert-info
+               | Your account has not been enabled for archving yet.
+               | At the moment accounts are enabled by hand to avoid uncontrolled and unmonitored groth.
+               | You've already given your authorization, so once the service has enough capacity it would start to archive your data as well.
+               | In case you'd like to remove this permission, just remove the application permissions for tweet-archive.me within you Twitter account.
+               a(href='https://twitter.com/settings/applications') twitter.com/settings/applications
