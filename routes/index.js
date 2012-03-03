@@ -61,6 +61,8 @@ exports.login = function(req, res) {
         } else {
                 // User found :)
             doc.lastlogin = new Date();
+            doc.token = req.session.twitter.accessToken
+            doc.tokenSecret = req.session.twitter.accessTokenSecret
             doc.save(function(err) {
                 res.redirect('/');
             });
