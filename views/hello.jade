@@ -1,13 +1,13 @@
 .container.row
     .hero.hero-unit.span7.offset2
         h1= title
-        p A little twitter archving service ... let's try it out:
+        p A little twitter archving service ... let's try it out*:
         p
-                a(href='/start').btn.btn-primary.btn-large Login with twitter&nbsp;
+                a(href='/start').btn.btn-info.btn-large Login with twitter&nbsp;
                     i.icon-chevron-right.icon-white
 .container.row
 
-        .span5.offset2
+        .span5.offset2.delayed
             | Twitter streams might contain valuable information and often shared links turn out to be
             | important right after they disappeared from the twitter timeline. So this one is trying to
             | build an archiv service for your Twitter timeline. With easy and flexible search functionality,
@@ -38,9 +38,11 @@
                 dt ...
                 dd Many other things, I haven't made up my mind on that yet.
 
-        .span3
+        .span3.delayed
             .delayed
-                p.alert This is early alpha, data will most likely be lost, interfaces might change, things will change without notice - better be prepared.
+                p.alert
+                    | *) This is early alpha, data might get lost, interfaces might change, things will change without notice
+                    | - better be prepared that there is no guarantee for anything, yet.
 
             .delayed
                 p.alert.alert-info You might wonder who's working here -&nbsp;
