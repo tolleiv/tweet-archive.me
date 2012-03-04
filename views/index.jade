@@ -1,10 +1,19 @@
 .container.row
+
     .span6.offset3.hero-unit.young-hero
         h2 @#{name}
             small &nbsp;&mdash; #{count} tweets archived so far ...
             a(href='/logout').btn.btn-warning.btn-small.pull-right Logout
 
-    .span6.offset3
+
+    .span2.offset1
+
+        input(placeholder='Search').span2.search
+
+        ul.facet.nav.nav-tabs.nav-stacked
+            li &nbsp;
+
+    .span6
         .tweets
 
     script(type='text/javascript')

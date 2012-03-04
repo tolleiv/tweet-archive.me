@@ -1,35 +1,74 @@
+
+var listDate = null;
+var author = null;
+var browseCfg = {
+    url:function (offset) {
+        var search = $(".search").val();
+        var url;
+        if (search.length || author) {
+            url = "/search.json?offset=" + offset + (search ? '&q=' + search : '') + (author ? '&author=' + author : '');
+        } else {
+            url = "/tweets.json?offset=" + offset;
+        }
+        return url;
+    },
+    template: function(response) {
+        var markup = '';
+
+        for (var i = 0; i < response.length; i++) {
+            var tweetDate = new Date(response[i].date);
+            if (!listDate || tweetDate.toGMTString().substr(0,16) != listDate.toGMTString().substr(0,16)) {
+                markup += '<div class="span1 tweet-date">' + tweetDate.toGMTString().substr(0,16) + '</div>'
+                listDate = tweetDate;
+            }
+            markup += renderTweet(response[i].data);
+        }
+        return markup;
+    },
+    itemsReturned:function (response) {
+        return response.length;
+    },
+    empty:function() {
+        return '<blockquote><p>Sorry found nothing :(</p></blockquote>'
+    },
+    offset:0,
+    loader:'<div class="loader"></div>',
+    sensitivity: 200,
+    useCache:true,
+    expiration:1
+};
+
 $(document).ready(function () {
     $('.delayed').delay(200).fadeIn();
-
-    var listDate = null;
-    $(".tweets").autobrowse({
-        url:function (offset) {
-            return "/tweets.json?offset=" + offset;
-        },
-        template:function (response) {
-            var markup = '';
-            console.log(response[0]);
-            for (var i = 0; i < response.length; i++) {
-                var tweetDate = new Date(response[i].date);
-                if (!listDate || tweetDate.toGMTString().substr(0,16) != listDate.toGMTString().substr(0,16)) {
-                    markup += '<div class="span1 tweet-date">' + tweetDate.toGMTString().substr(0,16) + '</div>'
-                    listDate = tweetDate;
-                }
-                markup += renderTweet(response[i].data);
-            }
-            return markup;
-        },
-        itemsReturned:function (response) {
-            return response.length;
-        },
-        offset:0,
-        //max:100,
-        loader:'<div class="loader"></div>',
-        sensitivity: 200,
-        useCache:true,
-        expiration:1
+    $(".search").change(function() {
+        $(".tweets").html('');
+        $(".tweets").autobrowse(browseCfg);
+        listDate = null;
     });
+    $(".tweets").autobrowse(browseCfg);
+
+    $.ajax({
+        url:'/authors',
+        success: function(data) {
+            $('.facet').html('');
+            for(var i=0;i<data.length;i++) {
+                $('.facet').append('<li><a onclick="filterAuthor(this, \'' + data[i].value + '\');return false;">' + data[i].value + ' ( ' + data[i].count + ')</a></li>');
+            }
+        }
+    });
+
 });
+
+function filterAuthor(obj,name) {
+
+    $('.facet > li').removeClass('active');
+    author = (author == name) ? null : name;
+    if (author) $(obj).parent().addClass('active');
+    $(".tweets").html('');
+    $(".tweets").autobrowse(browseCfg);
+    listDate = null;
+
+}
 
 function renderTweet(tweet) {
     var text = tweet.text;
