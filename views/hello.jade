@@ -23,16 +23,20 @@
                 dt Listing your tweets&nbsp;
                     i.icon-check
                 dd Whatever is in your archive will be listen in the backend as well. The GUI is not perfect yet but works ;)
+                dt Search and stuff&nbsp;
+                   i.icon-check
+                dd
+                    | That's what you need when your timeline outgrows a certain size - right?
+                    | Current solution covers a Apache Solr based solution. Builds up the search results quick enough at the moment and allows nice faceting.
+                    | It's still quite rough and really just a very basic solution which just scratches the possibilities of Solr and of the data comming in.
                 dt Remove shortened Urls&nbsp;
                     i.icon-check
                 dd An archive which holds shortened Urls is worthless once the shortener goes out of service, so replacing shortened Urls is sth. which I found essential and which is working in a basic implementation already.
 
             h3 Features to come (next):
             dl
-                dt Search
-                dd That's what you need when your timeline outgrows a certain size - right? This is also where Apache Solr might join the party - I'm not so sure atm.
                 dt Efficient storage
-                dd Currently all tweets are kept per user. That wasts memory and make all database operations a bit more inefficient.
+                dd Currently all tweets are kept per user. That wasts memory and make all database operations a bit more inefficient. Also the Apache Solr index is build up on that and the same tweet might be indexed twice atm. Space for improvement ;)
                 dt Data control
                 dd I'm not interested in your data anyhow - so providing a feature to delete your archive is planned quite early.
                 dt ...
@@ -52,7 +56,7 @@
                     a(href='http://www.twitter.com/tweetarchiveme')@tweetarchiveme on Twitter
 
             .delayed
-                p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Twitter Bootstrap and few others.
+                p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Apache Solr, Twitter Bootstrap, of course Linux and few others.
                 <a href="https://twitter.com/tweetarchiveme" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @tweetarchiveme</a>
 
 
