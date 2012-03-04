@@ -1,5 +1,9 @@
 
-var twitter = {
+module.exports.app = {
+    listMax: 25
+};
+
+module.exports.twitter = {
     consumerKey: '',
     consumerSecret: '',
     baseURL: 'http://localhost:3000',
@@ -7,10 +11,12 @@ var twitter = {
     afterLogin: '/login'
 };
 
-module.exports.twitter = twitter;
-
 module.exports.mongo = {
     url: 'mongodb://localhost/members'
+};
+module.exports.solr = {
+    core:'/tweetarchive',
+    port:8080
 };
 
 module.exports.user_credentials = function(user) {

@@ -8,7 +8,8 @@ var MessageSchema = new Schema({
     summary     : { type: String, required: true },
     data        : {},
     date        : Date,
-    users       : []
+    users       : [{ type: Schema.ObjectId, ref: 'Users'}],
+    indexed     : { type: Number, default: 0 }
 });
 
 // Date setter

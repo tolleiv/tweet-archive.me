@@ -1,0 +1,132 @@
+<?xml version="1.0" ?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<schema name="example core zero" version="1.1">
+  <types>
+
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="integer" class="solr.IntField" omitNorms="true"/>
+    <fieldType name="long" class="solr.LongField" omitNorms="true"/>
+    <fieldType name="float" class="solr.FloatField" omitNorms="true"/>
+    <fieldType name="double" class="solr.DoubleField" omitNorms="true"/>
+    <fieldType name="sint" class="solr.SortableIntField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="slong" class="solr.SortableLongField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="sfloat" class="solr.SortableFloatField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="sdouble" class="solr.SortableDoubleField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory"
+                generateWordParts="0"
+                generateNumberParts="0"
+                catenateWords="0"
+                preserverOriginal="1"
+                catenateNumbers="0"
+                catenateAll="1"
+                splitOnCaseChange="1"/>
+
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0" catenateWords="0"
+                catenateNumbers="0" catenateAll="1" splitOnCaseChange="1"/>
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+    <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
+    <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField"/>
+  </types>
+
+  <fields>
+    <!-- general -->
+    <field name="id" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
+    <field name="user" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="author" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="content" type="text" indexed="true" stored="true" termVectors="true"/>
+    <!--
+      Facet fields
+    -->
+    <field name="f_author" type="string" indexed="true" stored="true"/>
+    <copyField source="author" dest="f_author"/>
+
+    <!--
+        Dynamic field definitions. If a field name is not found,
+        dynamicFields will be used if the name matches any of the patterns.
+        RESTRICTION: the glob-like pattern in the name attribute must have a
+        "*" only at the start or the end. EXAMPLE: name="*_i" will match any
+        field ending in _i (like myid_i, z_i) Longer patterns will be matched
+        first. if equal size patterns both match, the first appearing in the
+        schema will be used.
+    -->
+    <dynamicField name="*_i" type="sint" indexed="true" stored="true"/>
+    <dynamicField name="*_s" type="string" indexed="true" stored="true"/>
+    <dynamicField name="*_su" type="string" indexed="true" stored="false"/>
+    <dynamicField name="*_l" type="slong" indexed="true" stored="true"/>
+    <dynamicField name="*_t" type="text" indexed="true" stored="true"/>
+    <dynamicField name="*_tu" type="text" indexed="true" stored="false"/>
+    <dynamicField name="*_tws" type="text_ws" indexed="true" stored="true"/>
+    <dynamicField name="*_b" type="boolean" indexed="true" stored="true"/>
+    <dynamicField name="*_f" type="sfloat" indexed="true" stored="true"/>
+    <dynamicField name="*_d" type="sdouble" indexed="true" stored="true"/>
+    <dynamicField name="*_dt" type="date" indexed="true" stored="true"/>
+    <dynamicField name="*_sm" type="string" indexed="true" stored="true" multiValued="true"/>
+    <dynamicField name="*_smu" type="string" indexed="true" stored="false" multiValued="true"/>
+
+    <!--
+        The following causes solr to ignore any fields that don't already
+        match an existing field name or dynamic field, rather than
+        reporting them as an error. Alternately, change the type="ignored"
+        to some other type e.g. "text" if you want unknown fields indexed
+        and/or stored by default
+    -->
+    <dynamicField name="*" type="ignored"/>
+
+  </fields>
+
+  <!-- field to use to determine and enforce document uniqueness. -->
+  <uniqueKey>id</uniqueKey>
+
+  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
+  <defaultSearchField>content</defaultSearchField>
+
+  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+  <solrQueryParser defaultOperator="OR"/>
+</schema>
+
