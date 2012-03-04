@@ -12,8 +12,8 @@ var refresh = setInterval(function () {
 
 function indexNewDocs() {
     var client = solr.createClient(config.solr);
-    MessageModel.find({ indexed:0}).populate('users').run(function (err, docs) {
-        if (err) return;
+    MessageModel.find({ indexed: 0}).populate('users').run(function (err, docs) {
+        if (err) { console.error(err); return; }
         docs.forEach(function (doc) {
             var mongoDoc = doc;
             doc.users.forEach(function (user) {

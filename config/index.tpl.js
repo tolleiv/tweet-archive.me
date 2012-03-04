@@ -3,13 +3,14 @@ module.exports.app = {
     listMax: 25
 };
 
-module.exports.twitter = {
+var twitter = {
     consumerKey: '',
     consumerSecret: '',
     baseURL: 'http://localhost:3000',
 //    logging: true, // If true, uses winston to log.
     afterLogin: '/login'
 };
+module.exports.twitter = twitter;
 
 module.exports.mongo = {
     url: 'mongodb://localhost/members'
