@@ -16,10 +16,14 @@ function indexNewDocs() {
         if (err) { console.error(err); return; }
         docs.forEach(function (doc) {
             var mongoDoc = doc;
+            var involved = doc.data.entities.user_mentions.map(function(item) { return item.screen_name;});
+            involved.push(doc.data.user.screen_name);
             doc.users.forEach(function (user) {
                 var solrDoc = {
                     id:doc.data.id,
-                    user:user.name,
+                    users:[user.name],
+                    involved:involved,
+                    hashtags:doc.data.entities.hashtags.map(function(item) { return item.text;}),
                     author:doc.data.user.screen_name,
                     content:doc.data.text
                 }
