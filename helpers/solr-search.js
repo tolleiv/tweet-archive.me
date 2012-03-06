@@ -36,7 +36,6 @@ module.exports.facetvalues = function(query, queryOptions, callback) {
     queryOptions.start = 0;
     queryOptions.rows = 0;
     queryOptions.facet = true;
-    queryOptions['facet.field'] = 'f_author';
     queryOptions['facet.limit'] = 20;
 
     client.query(query, queryOptions, function (err, response) {

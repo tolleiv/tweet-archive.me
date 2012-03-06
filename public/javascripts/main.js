@@ -1,16 +1,18 @@
 
 var listDate = null;
-var author = null;
+var involved = null;
 var browseCfg = {
     url:function (offset) {
         var search = $(".search").val();
-        var url;
-        if (search.length || author) {
-            url = "/search.json?offset=" + offset + (search ? '&q=' + search : '') + (author ? '&author=' + author : '');
-        } else {
-            url = "/tweets.json?offset=" + offset;
+
+        var query = ['offset=' + offset];
+        if (search.length) {
+            query.push('q=' + search);
         }
-        return url;
+        if (involved) {
+            query.push('involved=' + involved);
+        }
+        return (query.length > 1 ? "/search.json?" : "/tweets.json?") + query.join('&');
     },
     template: function(response) {
         var markup = '';
@@ -40,7 +42,22 @@ var browseCfg = {
 
 $(document).ready(function () {
     $('.delayed').delay(200).fadeIn();
+    $('.trigger-search').click(function() {
+        $(".search").val('').trigger('change');
+        $(this).addClass('hidden');
+        $('.clear-search').removeClass('hidden');
+    });
+    $('.clear-search').click(function() {
+        $(".search").val('').trigger('change');
+    })
     $(".search").change(function() {
+        if ($(this).val()) {
+          $('.trigger-search').addClass('hidden');
+          $('.clear-search').removeClass('hidden');
+        } else {
+            $('.clear-search').addClass('hidden');
+            $('.trigger-search').removeClass('hidden');
+        }
         $(".tweets").html('');
         $(".tweets").autobrowse(browseCfg);
         listDate = null;
@@ -48,22 +65,22 @@ $(document).ready(function () {
     $(".tweets").autobrowse(browseCfg);
 
     $.ajax({
-        url:'/authors',
+        url:'/involved.json',
         success: function(data) {
             $('.facet').html('');
             for(var i=0;i<data.length;i++) {
-                $('.facet').append('<li><a onclick="filterAuthor(this, \'' + data[i].value + '\');return false;">' + data[i].value + ' ( ' + data[i].count + ')</a></li>');
+                $('.facet').append('<li><a onclick="filterUser(this, \'' + data[i].value + '\');return false;">' + data[i].value + ' ( ' + data[i].count + ')</a></li>');
             }
         }
     });
 
 });
 
-function filterAuthor(obj,name) {
+function filterUser(obj,name) {
 
     $('.facet > li').removeClass('active');
-    author = (author == name) ? null : name;
-    if (author) $(obj).parent().addClass('active');
+    involved = (involved == name) ? null : name;
+    if (involved) $(obj).parent().addClass('active');
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
     listDate = null;

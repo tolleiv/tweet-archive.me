@@ -77,7 +77,9 @@
   <fields>
     <!-- general -->
     <field name="id" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
-    <field name="user" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="users" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="involved" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="hashtags" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="author" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="content" type="text" indexed="true" stored="true" termVectors="true"/>
     <!--

@@ -38,20 +38,38 @@ function captureTweets(user) {
             // Make sure we start him only once
         users[user.name] = true;
         stream.on('data', function (data) {
-            if (data.text && data.user && data.user.name) {
-                errorCnt[user.name] = 0;
-                expand(data.entities.urls, function(urls) {
-                    data.entities.urls = urls;
-                    var message = new MessageModel();
-                    message.summary = data.user.screen_name + ': ' + data.text
-                    message.data = data
-                    message.users.push(user._id);
-                    message.save(function (err) {
-                        if (!err && verbose) console.log('[' + user.name + ']' + data.user.screen_name + ': ' + data.text);
-                    });
-                });
 
+            var tweet = data;
+
+                // We don't want the friends list
+            if (data.friends) {
+                return;
             }
+                // Other actions e.g. maked sth favorite.
+            if (data.target_object) {
+                tweet = data.target_object;
+                tweet.entities = tweet.entities || {}
+                tweet.entities.hashtags = tweet.entities.hashtags  || []
+                tweet.entities.urls = tweet.entities.urls  || []
+                tweet.entities.user_mentions = tweet.entities.user_mentions  || []
+            }
+                // Still not the "right" shape?
+            if (!tweet.text || !tweet.user || !tweet.user.name) {
+                return;
+            }
+
+            errorCnt[user.name] = 0;
+            expand(tweet.entities.urls, function(urls) {
+                tweet.entities.urls = urls;
+                var message = new MessageModel();
+                message.summary = tweet.user.screen_name + ': ' + data.text
+                message.data = tweet
+                message.users.push(user._id);
+                message.save(function (err) {
+                    if (!err && verbose) console.log('[' + user.name + ']' + tweet.user.screen_name + ': ' + tweet.text);
+                });
+            });
+
         });
         stream.on('error', function (err) {
             if (verbose) console.log('Event: error')

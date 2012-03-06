@@ -6,9 +6,12 @@
             a(href='/logout').btn.btn-warning.btn-small.pull-right Logout
 
 
-    .span2.offset1
-
-        input(placeholder='Search').span2.search
+    .span2.offset1.sidebar
+        .input-append
+            input(placeholder='Search').search
+            .add-on
+                .trigger-search &gt;
+                .clear-search.hidden x
 
         ul.facet.nav.nav-tabs.nav-stacked
             li &nbsp;

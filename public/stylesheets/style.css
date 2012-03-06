@@ -69,3 +69,11 @@ body {
 .facet > li.active > a, .facet > li.active > a:hover {
     background: #f5f5f5;
 }
+
+input.search {
+    width:132px;
+}
+.trigger-search, .clear-search, .facet > li > a {
+    cursor: pointer; display:block;
+}
+.hidden { display:none; }

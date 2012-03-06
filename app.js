@@ -34,7 +34,7 @@ app.get('/login', routes.login);
 app.get('/logout', routes.logout);
 app.get('/tweets:format?', routes.tweets);
 app.get('/search:format?', routes.search);
-app.get('/authors:format?', routes.authors);
+app.get('/involved:format?', routes.involved);
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

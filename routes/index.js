@@ -10,18 +10,18 @@ mongoose.connect(config.mongo.url);
 
 exports.index = function (req, res) {
     if (typeof req.session.twitter != 'object') {
-        res.render('hello', { title:'tweet-archive.me' })
-    } else {
-        UserModel.findOne({ name:req.session.twitter.name }, function (err, doc) {
-            if (doc.features <= 0) {
-                res.render('wait', { title:'tweet-archive.me', name:req.session.twitter.name });
-            } else {
-                MessageModel.find({users:doc._id}).count().run(function (err, cnt) {
-                    res.render('index', { title:'tweet-archive.me', name:req.session.twitter.name, count:(err ? 0 : cnt) });
-                });
-            }
-        });
+        res.render('hello', { title:'tweet-archive.me' });
+        return;
     }
+    UserModel.findOne({ name:req.session.twitter.name }, function (err, doc) {
+        if (doc.features <= 0) {
+            res.render('wait', { title:'tweet-archive.me', name:req.session.twitter.name });
+        } else {
+            MessageModel.find({users:doc._id}).count().run(function (err, cnt) {
+                res.render('index', { title:'tweet-archive.me', name:req.session.twitter.name, count:(err ? 0 : cnt) });
+            });
+        }
+    });
 };
 
 exports.tweets = function (req, res) {
@@ -43,13 +43,12 @@ exports.search = function (req, res) {
         res.send('what???', 401);
         return;
     }
-    var fq = ['user:' + req.session.twitter.name];
+    var fq = ['users:' + req.session.twitter.name];
     var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
 
-    if (req.query.author) {
-        fq.push('author:' + req.query.author);
+    if (req.query.involved) {
+        fq.push('involved:' + req.query.involved);
     }
-
     var queryOptions = {
         fq: fq,
         start: parseInt(req.query.offset) || 0,
@@ -61,18 +60,21 @@ exports.search = function (req, res) {
     });
 }
 
-exports.authors = function(req, res) {
+/****************************************
+ * Facetten
+ ****************************************/
+exports.involved = function(req, res) {
     if (typeof req.session.twitter != 'object') {
         res.send('what???', 401);
         return;
     }
-    var fq = ['user:' + req.session.twitter.name];
+    var fq = ['users:' + req.session.twitter.name];
     var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
 
-    if (req.query.author) {
-        fq.push('author:' + req.query.author);
+    if (req.query.involved) {
+        fq.push('involved:' + req.query.involved);
     }
-    var queryOptions = { fq: fq };
+    var queryOptions = { fq: fq, 'facet.field': 'involved' };
 
     search.facetvalues(query, queryOptions, function(docs) {
         res.json(docs);
