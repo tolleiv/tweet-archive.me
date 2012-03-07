@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
     UserModel = require('../models/UserModel'),
     MessageModel = require('../models/MessageModel'),
     search = require('../helpers/solr-search.js'),
-    config = require('../config');
+    config = require('../config'),
+    facet = require('./facet.js');
 
 // Open DB connection
 mongoose.connect(config.mongo.url);
@@ -47,7 +48,7 @@ exports.search = function (req, res) {
     var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
 
     if (req.query.involved) {
-        fq.push('involved:' + req.query.involved);
+        fq.push('involved:' + req.query.involved.split(',').join(' OR involved:'));
     }
     var queryOptions = {
         fq: fq,
@@ -55,6 +56,10 @@ exports.search = function (req, res) {
         rows: config.app.listMax
     };
 
+    if (!req.query.q) {
+        queryOptions.sort = 'date desc'
+    }
+                                   console.log(queryOptions)
     search.find(query, queryOptions, function(docs) {
         res.json(docs);
     });
@@ -64,21 +69,10 @@ exports.search = function (req, res) {
  * Facetten
  ****************************************/
 exports.involved = function(req, res) {
-    if (typeof req.session.twitter != 'object') {
-        res.send('what???', 401);
-        return;
-    }
-    var fq = ['users:' + req.session.twitter.name];
-    var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
-
-    if (req.query.involved) {
-        fq.push('involved:' + req.query.involved);
-    }
-    var queryOptions = { fq: fq, 'facet.field': 'involved' };
-
-    search.facetvalues(query, queryOptions, function(docs) {
-        res.json(docs);
-    });
+    facet.list(req, res,  'involved')
+}
+exports.tags = function(req, res) {
+    facet.list(req, res,  'hashtags')
 }
 
 /****************************************

@@ -1,6 +1,7 @@
 
 var listDate = null;
 var involved = null;
+var tag = null;
 var browseCfg = {
     url:function (offset) {
         var search = $(".search").val();
@@ -10,7 +11,7 @@ var browseCfg = {
             query.push('q=' + search);
         }
         if (involved) {
-            query.push('involved=' + involved);
+            query.push('involved=' + involved.join(','));
         }
         return (query.length > 1 ? "/search.json?" : "/tweets.json?") + query.join('&');
     },
@@ -69,22 +70,25 @@ $(document).ready(function () {
         success: function(data) {
             $('.facet').html('');
             for(var i=0;i<data.length;i++) {
-                $('.facet').append('<li><a onclick="filterUser(this, \'' + data[i].value + '\');return false;">' + data[i].value + ' ( ' + data[i].count + ')</a></li>');
+                $('.facet').append('<li><a onclick="filterUser(this, \'' + data[i].value + '\');return false;">' + data[i].value + ' (' + data[i].count + ')</a></li>');
             }
         }
     });
-
 });
 
 function filterUser(obj,name) {
+  $(obj).parent().toggleClass('active');
 
-    $('.facet > li').removeClass('active');
-    involved = (involved == name) ? null : name;
-    if (involved) $(obj).parent().addClass('active');
-    $(".tweets").html('');
-    $(".tweets").autobrowse(browseCfg);
-    listDate = null;
+  if ($(obj).parent().hasClass('active')) {
+      involved = involved || []
+      involved.push(name);
+  } else {
+      involved = involved.filter(function(val) { return val != name; })
+  }
 
+  $(".tweets").html('');
+  $(".tweets").autobrowse(browseCfg);
+  listDate = null;
 }
 
 function renderTweet(tweet) {

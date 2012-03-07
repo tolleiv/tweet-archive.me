@@ -25,7 +25,8 @@ function indexNewDocs() {
                     involved:involved,
                     hashtags:doc.data.entities.hashtags.map(function(item) { return item.text;}),
                     author:doc.data.user.screen_name,
-                    content:doc.data.text
+                    content:doc.data.text,
+                    date: Math.round(doc.date.getTime()/1000)
                 }
                 client.add(solrDoc, function (err) {
                     if (err) return;
