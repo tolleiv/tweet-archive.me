@@ -65,44 +65,24 @@ function captureTweets(user) {
                 message.summary = tweet.user.screen_name + ': ' + data.text
                 message.data = tweet
                 message.users.push(user._id);
-                message.save(function (err) {
-                    if (!err && verbose) console.log('[' + user.name + ']' + tweet.user.screen_name + ': ' + tweet.text);
-                });
+                message.save(function (err) { /* what to do now? */ });
             });
 
         });
-        stream.on('error', function (err) {
-            if (verbose) console.log('Event: error')
-            if (verbose) console.log(err);
-        });
-        stream.on('end', function (response) {
-            if (verbose) console.log('Event: end - ' + user.name)
-            if (verbose) console.log(response);
-            users[user.name] = false;
-            errorCnt[user.name] = errorCnt[user.name]+1;
-            setTimeout(function() {
-                if (errorCnt[user.name] < 10) {
-                    if (verbose) console.log('Restart');
-                    capture({name: user.name})
-                } else {
-                    console.error('Stopped - ' + user.name)
-                }
-            }, errorCnt[user.name]*1000);
-        });
-        stream.on('destroy', function (response) {
-            // Handle a 'silent' disconnection from Twitter, no end/error event fired
-            if (verbose) console.log('Event: destroy' + user.name);
-            users[user.name] = false;
-            errorCnt[user.name] = errorCnt[user.name]+1;
-            setTimeout(function() {
-                if (errorCnt[user.name] < 10) {
-                    if (verbose) console.log('Restart');
-                    capture({name: user.name})
-                } else {
-                    console.error('Stopped - ' + user.name)
-                }
-            }, errorCnt[user.name]*1000);
-        });
+        stream.on('error', function (err) {  });
+        stream.on('end', function (response) { considerRestart(user.name) });
+        stream.on('destroy', function (response) { considerRestart(user.name) });
     });
-    console.info('Streaming for ' + user.name);
+}
+
+function considerRestart(name) {
+    users[name] = false;
+    errorCnt[name] = errorCnt[name] + 1;
+    setTimeout(function () {
+        if (errorCnt[name] < 10) {
+            capture({name:name})
+        } else {
+            console.error('Stopped - ' + name)
+        }
+    }, errorCnt[name] * 1000);
 }
