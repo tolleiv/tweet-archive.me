@@ -18,7 +18,7 @@ exports.index = function (req, res) {
         if (doc.features <= 0) {
             res.render('wait', { title:'tweet-archive.me', name:req.session.twitter.name });
         } else {
-            MessageModel.find({users:doc._id}).count().run(function (err, cnt) {
+            MessageModel.find({users:doc._id, indexed: 2}).count().run(function (err, cnt) {
                 res.render('index', { title:'tweet-archive.me', name:req.session.twitter.name, count:(err ? 0 : cnt) });
             });
         }
@@ -31,7 +31,7 @@ exports.tweets = function (req, res) {
         return;
     }
     UserModel.findOne({ name:req.session.twitter.name, features:1 }, function (err, doc) {
-        MessageModel.find({users:doc._id}).desc('date').limit(config.app.listMax).skip(parseInt(req.param('offset', 0))).run(function (err, docs) {
+        MessageModel.find({users:doc._id, indexed: 2}).desc('date').limit(config.app.listMax).skip(parseInt(req.param('offset', 0))).run(function (err, docs) {
             if (req.params.format) {
                 res.json(docs);
             }
