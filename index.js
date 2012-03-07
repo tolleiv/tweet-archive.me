@@ -13,7 +13,7 @@ var refresh = setInterval(function () {
 function indexNewDocs() {
     var client = solr.createClient(config.solr);
 
-    MessageModel.find({indexed:0}, function(err, docs) {
+    MessageModel.find({indexed:0}).limit(100).run(function(err, docs) {
         docs.forEach(function(doc) {
             MessageModel.find({'data.id':doc.data.id}, function(err,messages) {
                 var newDoc = doc;
