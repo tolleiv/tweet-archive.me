@@ -12,7 +12,7 @@ var refresh = setInterval(function () {
 
 function indexNewDocs() {
     var client = solr.createClient(config.solr);
-
+/*
     MessageModel.find({indexed:0}).limit(100).run(function(err, docs) {
         docs.forEach(function(doc) {
             MessageModel.find({'data.id':doc.data.id}, function(err,messages) {
@@ -46,8 +46,8 @@ function indexNewDocs() {
             });
         })
     });
-
-    MessageModel.find({ indexed: 1}).populate('users').run(function (err, docs) {
+      */
+    MessageModel.find({ indexed: 0}).populate('users').run(function (err, docs) {
         if (err) { console.error(err); return; }
         docs.forEach(function (doc) {
             var mongoDoc = doc;
