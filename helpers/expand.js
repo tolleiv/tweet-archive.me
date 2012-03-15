@@ -1,4 +1,6 @@
-
+/**
+ * Expand shortened URLs to their origin
+ */
 var http = require('http');
 var url = require('url');
 
