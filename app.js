@@ -39,6 +39,7 @@ app.get('/hans', routes.hans);
 app.get('/tweets:format?', routes.tweets);
 app.get('/search:format?', routes.search);
 app.get('/involved:format?', routes.involved);
+app.get('/tags:format?', routes.tags);
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

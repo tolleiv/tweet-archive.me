@@ -11,7 +11,12 @@ module.exports.list = function(req, res, name) {
     if (req.query[name]) {
         fq.push(name + ':' + req.query[name]);
     }
-    var queryOptions = { fq: fq, 'facet.field': name };
+
+    var queryOptions = {
+        fq: fq,
+        'facet.field': name,
+        'facet.limit': parseInt(req.query.limit)
+    };
 
     search.facetvalues(query, queryOptions, function(docs) {
         res.json(docs);

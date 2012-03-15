@@ -50,6 +50,9 @@ exports.search = function (req, res) {
     if (req.query.involved) {
         fq.push('involved:' + req.query.involved.split(',').join(' OR involved:'));
     }
+    if (req.query.tag) {
+        fq.push('hashtags:' + req.query.tag);
+    }
     var queryOptions = {
         fq: fq,
         start: parseInt(req.query.offset) || 0,
