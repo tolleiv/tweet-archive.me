@@ -30,8 +30,12 @@ app.configure('production', function(){
 // Routes
 app.get('/', routes.index);
 app.get('/start', routes.start);
+
 app.get('/login', routes.login);
 app.get('/logout', routes.logout);
+app.get('/milli', routes.milli);
+app.get('/hans', routes.hans);
+
 app.get('/tweets:format?', routes.tweets);
 app.get('/search:format?', routes.search);
 app.get('/involved:format?', routes.involved);

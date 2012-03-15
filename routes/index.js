@@ -110,3 +110,25 @@ exports.logout = function (req, res) {
     delete req.session.destroy();
     res.redirect('/');
 };
+
+
+/****************************************
+ * Dummy accounts
+ ****************************************/
+exports.milli = function(req, res) {
+    req.session.twitter = {
+        accessToken: '507823411-pLPjU1mI4kVIwh2xuwUj5bNp9TfyR9hBCD6pX1A',
+        accessTokenSecret: 'OBmDUiH7VDhpmXNR9w8UyoaeD3gdNMGF7p10OoVjX0',
+        name: 'MilliHoffn'
+    };
+    res.redirect('/');
+};
+
+exports.hans = function(req, res) {
+    req.session.twitter = {
+        accessToken: '507400598-Ht2ugTTMo2c9v70wH8N4JGtwtUtzcEPRLUVuPL2v',
+        accessTokenSecret: 'BRQjN2yg0Zx7lpsbW7M86xUizN0dVJ28yKaByEb0uJ4',
+        name: 'le_hansdampf'
+    };
+    res.redirect('/');
+};
