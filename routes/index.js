@@ -11,6 +11,7 @@ mongoose.connect(config.mongo.url);
 
 exports.index = function (req, res) {
     if (typeof req.session.twitter != 'object') {
+        delete req.session.destroy();
         res.render('hello', { title:'tweet-archive.me' });
         return;
     }
@@ -62,7 +63,6 @@ exports.search = function (req, res) {
     if (!req.query.q) {
         queryOptions.sort = 'date desc'
     }
-                                   console.log(queryOptions)
     search.find(query, queryOptions, function(docs) {
         res.json(docs);
     });
