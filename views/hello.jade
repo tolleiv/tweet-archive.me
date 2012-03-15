@@ -36,7 +36,10 @@
             h3 Features to come (next):
             dl
                 dt Efficient storage
-                dd Currently all tweets are kept per user. That wasts memory and make all database operations a bit more inefficient. Also the Apache Solr index is build up on that and the same tweet might be indexed twice atm. Space for improvement ;)
+                dd
+                    strike
+                        Currently all tweets are kept per user. That wasts memory and make all database operations a bit more inefficient. Also the Apache Solr index is build up on that and the same tweet might be indexed twice atm. Space for improvement ;)
+                    | &nbsp; Still need to figure out how to avoid some overhead, even if data duplicates are avoided already.
                 dt Data control
                 dd I'm not interested in your data anyhow - so providing a feature to delete your archive is planned quite early.
                 dt ...
@@ -47,6 +50,12 @@
                 p.alert
                     | *) This is early alpha, data might get lost, interfaces might change, things will change without notice
                     | - better be prepared that there is no guarantee for anything, yet.
+
+            .delayed
+                p.alert.alert-success There are demo accounts showing how an archive currently looks like, see our dummies
+                    a(href='/hans') &nbsp;Hans&nbsp;
+                    | and
+                    a(href='/milli') &nbsp;Milli&nbsp;
 
             .delayed
                 p.alert.alert-info You might wonder who's working here -&nbsp;
