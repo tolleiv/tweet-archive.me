@@ -1,0 +1,42 @@
+.container.row
+    .hero.hero-unit.span7.offset2
+        h1= title
+        p A little twitter archving service ... let's try it out*:
+        p
+                a(href='/start').btn.btn-info.btn-large Login with twitter&nbsp;
+                    i.icon-chevron-right.icon-white
+.container.row
+
+        .span5.offset2.delayed
+
+            h3 Known issues:
+            dl
+                dt Login issues
+                dd
+                 | The authentification isn't to robust atm - you might run into login issues.
+                 | Just restart the login and most likely things will work with the second try.
+                dt Browserhistory not kept
+                dd
+                 | At the moment the filters aren't persisted anyhow - therefore reloading the browser or using the history back button
+                 | will not restore the filter states. Trying to get that in soon.
+                dd ...
+                dt Anything missing?
+                dd
+                 | Not sure I've found / removed all issues already - let me know in case you found some other issues.
+
+        .span3.delayed
+
+            .delayed
+                p.alert.alert-info You might wonder who's working here -&nbsp;
+                    a(href='http://www.twitter.com/tolleiv') find me on Twitter @tolleiv
+                    br
+                    | To get updates on the service simply follow&nbsp;
+                    a(href='http://www.twitter.com/tweetarchiveme')@tweetarchiveme on Twitter
+
+            .delayed
+                p.alert.alert-info This service is build up on OpenSource software using NodeJS, MongoDB, ExpressJS, Apache Solr, Twitter Bootstrap, of course Linux and few others.
+                <a href="https://twitter.com/tweetarchiveme" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @tweetarchiveme</a>
+
+
+
+

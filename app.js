@@ -35,6 +35,7 @@ app.get('/login', routes.login);
 app.get('/logout', routes.logout);
 app.get('/milli', routes.milli);
 app.get('/hans', routes.hans);
+app.get('/info', routes.static('info'));
 
 app.get('/tweets:format?', routes.tweets);
 app.get('/search:format?', routes.search);

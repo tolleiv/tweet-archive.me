@@ -135,3 +135,9 @@ exports.hans = function(req, res) {
     };
     res.redirect('/');
 };
+
+exports.static = function(name) {
+    return function (req, res) {
+        res.render(name, { title:'tweet-archive.me' });
+    }
+};
