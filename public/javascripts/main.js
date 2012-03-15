@@ -76,26 +76,26 @@ var goFacetts = function() {
     if (!filters.involved || filters.involved.length==0) {
         var filter = filters.hashtags ? '&hashtags=' + filters.hashtags.join(',')  : '';
         console.log(filter)
-        renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 'involved', 10)
+        renderFacett('.users', '/involved.json?limit=MAX' + filter, 'involved', '@', 10)
     }
     if (!filters.hashtags || filters.hashtags.length==0) {
         var filter = filters.involved ? '&involved=' + filters.involved.join(',') : '';
-        renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 'hashtags', 10)
+        renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'hashtags', '#', 10)
     }
 };
 
-function renderFacett(selector, url, filterName, prefix, active, limit) {
+function renderFacett(selector, url, filter, prefix, limit) {
     $.ajax({
         url:url.replace(/MAX/, limit),
         success:function (data) {
             $(selector).html('');
             for (var i = 0; i < data.length; i++) {
-                var cls = filters[active].length && filters[active].indexOf(data[i].value) != -1 ? 'class="active"' : '';
-                $(selector).append('<li ' + cls + '><a onclick="' + filterName + '(this, \'' + data[i].value + '\');return false;">' + prefix + data[i].value + ' (' + data[i].count + ')</a></li>');
+                var cls = filters[filter].length && filters[filter].indexOf(data[i].value) != -1 ? 'class="active"' : '';
+                $(selector).append('<li ' + cls + '><a onclick="filter(this, \'' + filter + '\', \'' + data[i].value + '\');return false;">' + prefix + data[i].value + ' (' + data[i].count + ')</a></li>');
             }
             if (data.length == limit) {
                 $(selector).append('<li>' +
-                    '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\',\'' + prefix + '\',\'' + active + '\', ' + (limit + 10) + '); return false;">... more ...</a>' +
+                    '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filter + '\',\'' + prefix + '\', ' + (limit + 10) + '); return false;">... more ...</a>' +
                  //   '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\', ' + (limit - 10) + '); return false;">... less ...</a>' +
                     '</li>')
             }
@@ -103,39 +103,21 @@ function renderFacett(selector, url, filterName, prefix, active, limit) {
     });
 }
 
-function filterUser(obj, name) {
+function filter(obj, name, value) {
     $(obj).parent().toggleClass('active');
 
     if ($(obj).parent().hasClass('active')) {
-        filters.involved = filters.involved || []
-        filters.involved.push(name);
+        filters[name] = filters[name] || []
+        filters[name].push(value);
     } else {
-        filters.involved = filters.involved.filter(function (val) {
-            return val != name;
+        filters[name] = filters[name].filter(function (val) {
+            return val != value;
         })
     }
 
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
     goFacetts()
-    listDate = null;
-}
-function filterTag(obj, name) {
-    $(obj).parent().toggleClass('active');
-
-    if ($(obj).parent().hasClass('active')) {
-        filters.hashtags = filters.hashtags || []
-        filters.hashtags.push(name);
-    } else {
-        filters.hashtags = filters.hashtags.filter(function (val) {
-            return val != name;
-        })
-    }
-
-    $(".tweets").html('');
-    $(".tweets").autobrowse(browseCfg);
-    goFacetts()
-
     listDate = null;
 }
 
