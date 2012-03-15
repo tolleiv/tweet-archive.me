@@ -1,6 +1,6 @@
 
 var search = require('../helpers/solr-search.js');
-module.exports.list = function(req, res, name) {
+module.exports.list = function(req, res, name, related) {
     if (typeof req.session.twitter != 'object') {
         res.send('what???', 401);
         return;
@@ -8,8 +8,16 @@ module.exports.list = function(req, res, name) {
     var fq = ['users:' + req.session.twitter.name];
     var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
 
+     /*
     if (req.query[name]) {
         fq.push(name + ':' + req.query[name]);
+    }
+     */
+
+    var others = related.split(',');
+    for(var i=0;i<others.length;i++) {
+        if (!req.query[others[i]]) continue;
+        fq.push(others[i] + ':' + req.query[others[i]].split(',').join(' OR ' + others[i] + ':'))
     }
 
     var queryOptions = {

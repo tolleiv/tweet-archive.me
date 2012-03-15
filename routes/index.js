@@ -50,8 +50,8 @@ exports.search = function (req, res) {
     if (req.query.involved) {
         fq.push('involved:' + req.query.involved.split(',').join(' OR involved:'));
     }
-    if (req.query.tag) {
-        fq.push('hashtags:' + req.query.tag);
+    if (req.query.hashtags) {
+        fq.push('hashtags:' + req.query.hashtags.split(',').join(' OR hashtags:'));
     }
     var queryOptions = {
         fq: fq,
@@ -72,10 +72,10 @@ exports.search = function (req, res) {
  * Facetten
  ****************************************/
 exports.involved = function(req, res) {
-    facet.list(req, res,  'involved')
+    facet.list(req, res,  'involved', 'hashtags')
 }
 exports.tags = function(req, res) {
-    facet.list(req, res,  'hashtags')
+    facet.list(req, res,  'hashtags', 'involved')
 }
 
 /****************************************

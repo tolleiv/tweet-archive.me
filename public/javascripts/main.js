@@ -1,6 +1,6 @@
 var listDate = null;
 var involved = null;
-var tag = null;
+var tags = null;
 var browseCfg = {
     url:function (offset) {
         var search = $(".search").val();
@@ -12,8 +12,8 @@ var browseCfg = {
         if (involved) {
             query.push('involved=' + involved.join(','));
         }
-        if (tag) {
-            query.push('tag=' + tag);
+        if (tags) {
+            query.push('hashtags=' + tags.join(','));
         }
         return (query.length > 1 ? "/search.json?" : "/tweets.json?") + query.join('&');
     },
@@ -67,9 +67,23 @@ $(document).ready(function () {
     });
     $(".tweets").autobrowse(browseCfg);
 
-    renderFacett('.users', '/involved.json?limit=MAX', 'filterUser', '@', 10)
-    renderFacett('.tags', '/tags.json?limit=MAX', 'filterTag', '#', 10)
+    goUsers();
+    goTags();
 });
+
+var goUsers = function(filter) {
+    if (involved) {
+        return;
+    }
+    renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 10)
+};
+
+var goTags = function(filter) {
+    if (tags) {
+        return;
+    }
+    renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 10)
+};
 
 
 function renderFacett(selector, url, filterName, prefix, limit) {
@@ -85,8 +99,6 @@ function renderFacett(selector, url, filterName, prefix, limit) {
                     '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\',\'' + prefix + '\', ' + (limit + 10) + '); return false;">... more ...</a>' +
                  //   '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\', ' + (limit - 10) + '); return false;">... less ...</a>' +
                     '</li>')
-            } else {
-                console.log([data.length, limit])
             }
         }
     });
@@ -106,15 +118,24 @@ function filterUser(obj, name) {
 
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
+    goTags('&involved=' + involved.join(','))
     listDate = null;
 }
 function filterTag(obj, name) {
+    $(obj).parent().toggleClass('active');
 
-    $('.tags > li').removeClass('active');
-    tag = (tag == name) ? null : name;
-    if (tag) $(obj).parent().addClass('active');
+    if ($(obj).parent().hasClass('active')) {
+        tags = tags || []
+        tags.push(name);
+    } else {
+        tags = tags.filter(function (val) {
+            return val != name;
+        })
+    }
+
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
+    goUsers('&hashtags=' + tags.join(','))
     listDate = null;
 
 }
