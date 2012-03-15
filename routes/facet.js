@@ -1,5 +1,15 @@
 
 var search = require('../helpers/solr-search.js');
+
+/**
+ * Get the facet value list for a certain user,
+ * makes sure existing facet-filters are taken into account
+ *
+ * @param req
+ * @param res
+ * @param name
+ * @param related
+ */
 module.exports.list = function(req, res, name, related) {
     if (typeof req.session.twitter != 'object') {
         res.send('what???', 401);
@@ -7,12 +17,6 @@ module.exports.list = function(req, res, name, related) {
     }
     var fq = ['users:' + req.session.twitter.name];
     var query = req.query.q ? req.query.q.replace(/:/, '') : '*:*';
-
-     /*
-    if (req.query[name]) {
-        fq.push(name + ':' + req.query[name]);
-    }
-     */
 
     var others = related.split(',');
     for(var i=0;i<others.length;i++) {

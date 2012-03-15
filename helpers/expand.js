@@ -48,7 +48,13 @@ function expandUrls (i, data, callback) {
         expandUrls(i+1, data, callback);
     });
 }
-
+/**
+ * Try to expend the given URLs list
+ * Used to remove shortened urls in our tweets
+ *
+ * @param urls
+ * @param callback
+ */
 function expand(urls, callback) {
     expandUrls(0, urls, callback);
 }

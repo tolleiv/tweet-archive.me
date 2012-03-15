@@ -6,6 +6,14 @@ var solr = require('solr'),
 
 var client = solr.createClient(config.solr);
 
+/**
+ * Use the Solr indexed to find messsges and Mongo to populate the
+ * actual message data
+ *
+ * @param query
+ * @param queryOptions
+ * @param callback
+ */
 module.exports.find = function(query, queryOptions, callback) {
     client.query(query, queryOptions, function (err, response) {
         if (err) return;
@@ -29,6 +37,14 @@ module.exports.find = function(query, queryOptions, callback) {
     });
 };
 
+/**
+ * Build up "plain" facet value list for the given query options
+ * Used for hashtags and users
+ *
+ * @param query
+ * @param queryOptions
+ * @param callback
+ */
 module.exports.facetvalues = function(query, queryOptions, callback) {
 
     queryOptions = queryOptions || {}
