@@ -67,24 +67,25 @@ $(document).ready(function () {
     });
     $(".tweets").autobrowse(browseCfg);
 
-    goUsers();
-    goTags();
+    goFacetts();
 });
 
-var goUsers = function(filter) {
-    if (involved) {
-        return;
+var goFacetts = function() {
+    if (!involved || involved.length==0) {
+        var filter = tags ? '&hashtags=' + tags.join(',')  : '';
+        console.log(filter)
+        renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 10)
+    } else {
+        console.log(involved)
     }
-    renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 10)
-};
+    if (!tags || tags.length==0) {
+        var filter = involved ? '&involved=' + involved.join(',') : '';
+        renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 10)
+    } else {
+            console.log(tags)
+        }
 
-var goTags = function(filter) {
-    if (tags) {
-        return;
-    }
-    renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 10)
 };
-
 
 function renderFacett(selector, url, filterName, prefix, limit) {
     $.ajax({
@@ -118,7 +119,7 @@ function filterUser(obj, name) {
 
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
-    goTags('&involved=' + involved.join(','))
+    goFacetts()
     listDate = null;
 }
 function filterTag(obj, name) {
@@ -135,9 +136,9 @@ function filterTag(obj, name) {
 
     $(".tweets").html('');
     $(".tweets").autobrowse(browseCfg);
-    goUsers('&hashtags=' + tags.join(','))
-    listDate = null;
+    goFacetts()
 
+    listDate = null;
 }
 
 function renderTweet(tweet) {
