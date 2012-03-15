@@ -15,7 +15,7 @@ var browseCfg = {
             query.push('involved=' + filters.involved.join(','));
         }
         if (filters.hashtags) {
-            query.push('hashfilters.hashtags=' + filters.hashtags.join(','));
+            query.push('hashtags=' + filters.hashtags.join(','));
         }
         return (query.length > 1 ? "/search.json?" : "/tweets.json?") + query.join('&');
     },
