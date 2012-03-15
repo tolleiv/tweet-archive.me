@@ -1,6 +1,8 @@
 var listDate = null;
-var involved = null;
-var tags = null;
+var filters = {
+    involved: [],
+    hashtags: []
+};
 var browseCfg = {
     url:function (offset) {
         var search = $(".search").val();
@@ -9,11 +11,11 @@ var browseCfg = {
         if (search.length) {
             query.push('q=' + search);
         }
-        if (involved) {
-            query.push('involved=' + involved.join(','));
+        if (filters.involved) {
+            query.push('involved=' + filters.involved.join(','));
         }
-        if (tags) {
-            query.push('hashtags=' + tags.join(','));
+        if (filters.hashtags) {
+            query.push('hashfilters.hashtags=' + filters.hashtags.join(','));
         }
         return (query.length > 1 ? "/search.json?" : "/tweets.json?") + query.join('&');
     },
@@ -71,33 +73,29 @@ $(document).ready(function () {
 });
 
 var goFacetts = function() {
-    if (!involved || involved.length==0) {
-        var filter = tags ? '&hashtags=' + tags.join(',')  : '';
+    if (!filters.involved || filters.involved.length==0) {
+        var filter = filters.hashtags ? '&hashtags=' + filters.hashtags.join(',')  : '';
         console.log(filter)
-        renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 10)
-    } else {
-        console.log(involved)
+        renderFacett('.users', '/involved.json?limit=MAX' + filter, 'filterUser', '@', 'involved', 10)
     }
-    if (!tags || tags.length==0) {
-        var filter = involved ? '&involved=' + involved.join(',') : '';
-        renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 10)
-    } else {
-            console.log(tags)
-        }
-
+    if (!filters.hashtags || filters.hashtags.length==0) {
+        var filter = filters.involved ? '&involved=' + filters.involved.join(',') : '';
+        renderFacett('.tags', '/tags.json?limit=MAX' + filter, 'filterTag', '#', 'hashtags', 10)
+    }
 };
 
-function renderFacett(selector, url, filterName, prefix, limit) {
+function renderFacett(selector, url, filterName, prefix, active, limit) {
     $.ajax({
         url:url.replace(/MAX/, limit),
         success:function (data) {
             $(selector).html('');
             for (var i = 0; i < data.length; i++) {
-                $(selector).append('<li><a onclick="' + filterName + '(this, \'' + data[i].value + '\');return false;">' + prefix + data[i].value + ' (' + data[i].count + ')</a></li>');
+                var cls = filters[active].length && filters[active].indexOf(data[i].value) != -1 ? 'class="active"' : '';
+                $(selector).append('<li ' + cls + '><a onclick="' + filterName + '(this, \'' + data[i].value + '\');return false;">' + prefix + data[i].value + ' (' + data[i].count + ')</a></li>');
             }
             if (data.length == limit) {
                 $(selector).append('<li>' +
-                    '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\',\'' + prefix + '\', ' + (limit + 10) + '); return false;">... more ...</a>' +
+                    '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\',\'' + prefix + '\',\'' + active + '\', ' + (limit + 10) + '); return false;">... more ...</a>' +
                  //   '<a onclick="renderFacett(\'' + selector + '\', \'' + url + '\',\'' + filterName + '\', ' + (limit - 10) + '); return false;">... less ...</a>' +
                     '</li>')
             }
@@ -109,10 +107,10 @@ function filterUser(obj, name) {
     $(obj).parent().toggleClass('active');
 
     if ($(obj).parent().hasClass('active')) {
-        involved = involved || []
-        involved.push(name);
+        filters.involved = filters.involved || []
+        filters.involved.push(name);
     } else {
-        involved = involved.filter(function (val) {
+        filters.involved = filters.involved.filter(function (val) {
             return val != name;
         })
     }
@@ -126,10 +124,10 @@ function filterTag(obj, name) {
     $(obj).parent().toggleClass('active');
 
     if ($(obj).parent().hasClass('active')) {
-        tags = tags || []
-        tags.push(name);
+        filters.hashtags = filters.hashtags || []
+        filters.hashtags.push(name);
     } else {
-        tags = tags.filter(function (val) {
+        filters.hashtags = filters.hashtags.filter(function (val) {
             return val != name;
         })
     }
