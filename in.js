@@ -60,12 +60,21 @@ function captureTweets(user) {
 
             errorCnt[user.name] = 0;
             expand(tweet.entities.urls, function(urls) {
-                tweet.entities.urls = urls;
-                var message = new MessageModel();
-                message.summary = tweet.user.screen_name + ': ' + data.text
-                message.data = tweet
-                message.users.push(user._id);
-                message.save(function (err) { /* what to do now? */ });
+                var upsertData = {
+                    $addToSet:{ users:user._id },
+                    $set:{
+                        tweetId:data.id,
+                        data:tweet,
+                        summary:tweet.user.screen_name + ': ' + data.text
+                    },
+                    $inc:{ tweetFound:1 }
+                }
+                MessageModel.update({tweetId:tweet.id}, upsertData, {upsert:true}, function (err) {
+                    if (err) {
+                        console.log(data.id + 'not saved');
+                        console.log(err)
+                    }
+                });
             });
 
         });
