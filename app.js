@@ -37,7 +37,7 @@ app.get('/milli', routes.milli);
 app.get('/hans', routes.hans);
 app.get('/info', routes.static('info'));
 
-app.get('/tweets:format?', routes.tweets);
+app.get('/tweets:format?', routes.search);
 app.get('/search:format?', routes.search);
 app.get('/involved:format?', routes.involved);
 app.get('/tags:format?', routes.tags);

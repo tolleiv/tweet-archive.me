@@ -38,7 +38,6 @@ function captureTweets(user) {
             // Make sure we start him only once
         users[user.name] = true;
         stream.on('data', function (data) {
-
             var tweet = data;
 
                 // We don't want the friends list
@@ -65,7 +64,8 @@ function captureTweets(user) {
                     $set:{
                         tweetId:data.id,
                         data:tweet,
-                        summary:tweet.user.screen_name + ': ' + data.text
+                        summary:tweet.user.screen_name + ': ' + data.text,
+                        date: new Date()
                     },
                     $inc:{ tweetFound:1 }
                 }
@@ -73,7 +73,10 @@ function captureTweets(user) {
                     if (err) {
                         console.log(data.id + 'not saved');
                         console.log(err)
+                    } else {
+                        console.log('.' + user.name + tweet.id)
                     }
+
                 });
             });
 

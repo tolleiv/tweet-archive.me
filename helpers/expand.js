@@ -17,7 +17,7 @@ function expandThisUrl(urlToParse, callback) {
         callback(null, res.headers.location || short.href);
     }
     function forwardError(err) {
-        callback(err, short,href);
+        callback(err, short.href);
     }
 }
 
@@ -57,6 +57,7 @@ function expandUrls (i, data, callback) {
  */
 function expand(urls, callback) {
     expandUrls(0, urls, callback);
+    //callback(urls)
 }
 
 module.exports = expand

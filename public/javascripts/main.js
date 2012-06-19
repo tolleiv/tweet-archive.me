@@ -46,6 +46,7 @@ var browseCfg = {
 };
 
 $(document).ready(function () {
+    $('.tabbable').tab()
     $('.delayed').delay(200).fadeIn();
     $('.trigger-search').click(function () {
         $(".search").val('').trigger('change');
@@ -75,7 +76,6 @@ $(document).ready(function () {
 var goFacetts = function() {
     if (!filters.involved || filters.involved.length==0) {
         var filter = filters.hashtags ? '&hashtags=' + filters.hashtags.join(',')  : '';
-        console.log(filter)
         renderFacett('.users', '/involved.json?limit=MAX' + filter, 'involved', '@', 10)
     }
     if (!filters.hashtags || filters.hashtags.length==0) {

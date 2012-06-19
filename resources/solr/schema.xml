@@ -82,7 +82,7 @@
     <field name="hashtags" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="author" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="content" type="text" indexed="true" stored="true" termVectors="true"/>
-    <field name="date" type="sint" indexed="true" stored="true" multiValued="false"/>
+    <field name="date" type="date" indexed="true" stored="true" multiValued="false"/>
     <!--
       Facet fields
     -->

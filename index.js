@@ -12,28 +12,41 @@ var refresh = setInterval(function () {
 
 function indexNewDocs() {
     var client = solr.createClient(config.solr);
-    MessageModel.find({ indexed: 0}).populate('users').run(function (err, docs) {
+    MessageModel.find( { $or :  [ { indexed: 0},{ indexed: null}] } ).populate('users').run(function (err, docs) {
         if (err) { console.error(err); return; }
         docs.forEach(function (doc) {
+
+            if (doc.users.length == 0) {
+                doc.indexed = -1;
+                doc.save();
+                return;
+            }
             var mongoDoc = doc;
             var involved = doc.data.entities.user_mentions.map(function(item) { return item.screen_name;});
             involved.push(doc.data.user.screen_name);
-            doc.users.forEach(function (user) {
-                var solrDoc = {
-                    id:doc.data.id,
-                    users:[user.name],
-                    involved:involved,
-                    hashtags:doc.data.entities.hashtags.map(function(item) { return item.text;}),
-                    author:doc.data.user.screen_name,
-                    content:doc.data.text,
-                    date: Math.round(doc.date.getTime()/1000)
+            var users = doc.users.map(function(item) { return item.name; })
+
+            var solrDoc = {
+                id:doc.data.id,
+                users:users,
+                involved:involved,
+                hashtags:doc.data.entities.hashtags.map(function(item) { return item.text;}),
+                author:doc.data.user.screen_name,
+                content:doc.data.text,
+                date: (new Date(doc.data.created_at)).toISOString() // Math.round(doc.date.getTime()/1000)
+            }
+            client.add(solrDoc, function (err) {
+                if (err) {
+                    console.log(err);
+                    return;
                 }
-                client.add(solrDoc, function (err) {
-                    if (err) return;
-                    mongoDoc.indexed = 2;
-                    mongoDoc.save(function (err, doc) { });
+                mongoDoc.indexed = 2;
+                mongoDoc.save(function (err, doc) {
+                    if (err){
+                        console.error(err);
+                    }
                 });
-            })
+            });
 
         });
         client.commit();
