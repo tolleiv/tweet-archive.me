@@ -31,7 +31,9 @@ capture({});
 var refresh = setInterval(function() { capture({}); }, 30000);
 
 function captureTweets(user) {
-    if (typeof user != 'object' || users[user.name] == true) return;
+    if (typeof user != 'object' || users[user.name] == true) {
+        return;
+    }
 
     var twit = new twitter(config.user_credentials(user));
     twit.stream('user', {track:user.name}, function(stream) {
@@ -39,7 +41,6 @@ function captureTweets(user) {
         users[user.name] = true;
         stream.on('data', function (data) {
             var tweet = data;
-
                 // We don't want the friends list
             if (data.friends) {
                 return;
@@ -62,9 +63,9 @@ function captureTweets(user) {
                 var upsertData = {
                     $addToSet:{ users:user._id },
                     $set:{
-                        tweetId:data.id,
+                        tweetId:tweet.id,
                         data:tweet,
-                        summary:tweet.user.screen_name + ': ' + data.text,
+                        summary:tweet.user.screen_name + ': ' + tweet.text,
                         date: new Date()
                     },
                     $inc:{ tweetFound:1 }

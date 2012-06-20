@@ -11,7 +11,7 @@ mongoose.connect(config.mongo.url);
 
 exports.index = function (req, res) {
     if (typeof req.session.twitter != 'object') {
-        delete req.session.destroy();
+        req.session.destroy();
         res.render('hello', { title:'tweet-archive.me' });
         return;
     }
@@ -82,7 +82,7 @@ exports.tags = function(req, res) {
  * Login stuff
  ****************************************/
 exports.start = function (req, res) {
-    delete req.session.destroy();
+    req.session.destroy();
     res.redirect('/sessions/login');
 };
 
@@ -110,7 +110,7 @@ exports.login = function (req, res) {
 };
 
 exports.logout = function (req, res) {
-    delete req.session.destroy();
+    req.session.destroy();
     res.redirect('/');
 };
 

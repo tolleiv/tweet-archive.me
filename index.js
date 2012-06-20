@@ -12,10 +12,9 @@ var refresh = setInterval(function () {
 
 function indexNewDocs() {
     var client = solr.createClient(config.solr);
-    MessageModel.find( { $or :  [ { indexed: 0},{ indexed: null}] } ).populate('users').run(function (err, docs) {
+    MessageModel.find( { $or :  [ { indexed: 0},{ indexed: null}] } ).limit(1000).populate('users').run(function (err, docs) {
         if (err) { console.error(err); return; }
         docs.forEach(function (doc) {
-
             if (doc.users.length == 0) {
                 doc.indexed = -1;
                 doc.save();
